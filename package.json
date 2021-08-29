@@ -9,9 +9,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^1.14.7"
+    "nodemon": "^2.0.12"
   },
   "dependencies": {
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "html-template-tag": "^4.0.0",
+    "morgan": "^1.10.0",
+    "volleyball": "^1.5.1"
   }
 }
