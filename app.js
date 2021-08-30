@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
   		}
   		interval = seconds / 86400;
   		if (interval >= 1) {
-    		return Math.floor(interval) + " day(s) ago";
+    		return Math.floor(interval) + " days ago";
   		}
   		interval = seconds / 3600;
   		if (interval > 1) {
@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
   		}
   		return Math.floor(seconds) + " seconds ago";
 	}
-	let aDay = 24*60*60*1000;
+	let aDay = 24 * 60 * 60 * 1000;
 
 	const postsListHtml = `<!DOCTYPE html>
   		<html>
