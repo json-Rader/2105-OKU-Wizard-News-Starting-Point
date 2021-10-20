@@ -1,38 +1,13 @@
 const express = require("express");
 const morgan = require("morgan");
 const postBank = require("./postBank");
+var timeAgo = require('node-time-ago');
+
 const app = express();
 app.use(morgan('dev'));
 
 app.get("/", (req, res) => {
 	const posts = postBank.list();
-
-	function timeSince(date) {
-  		let seconds = Math.floor((new Date() - date) / 1000);
-  		let interval = seconds / 31536000;
-  		if (interval > 1) {
-    		return Math.floor(interval) + " years ago";
-  		}
-  		interval = seconds / 2592000;
-  		if (interval > 1) {
-    		return Math.floor(interval) + " months ago";
-  		}
-  		interval = seconds / 86400;
-  		if (interval >= 1) {
-    		return Math.floor(interval) + " days ago";
-  		}
-  		interval = seconds / 3600;
-  		if (interval > 1) {
-    		return Math.floor(interval) + " hours ago";
-  		}
-  		interval = seconds / 60;
-  		if (interval > 1) {
-    		return Math.floor(interval) + " minutes ago";
-  		}
-  		return Math.floor(seconds) + " seconds ago";
-	}
-	let aDay = 24 * 60 * 60 * 1000;
-
 	const postsListHtml = `<!DOCTYPE html>
   		<html>
 	  		<head>
@@ -49,7 +24,7 @@ app.get("/", (req, res) => {
 						  		<small>(by ${post.name})</small>
 					  		</p>
 					  		<small class="news-info">
-						  		${post.upvotes} upvotes | ${timeSince(new Date(post.date)-aDay)}
+						  		${post.upvotes} upvotes | ${timeAgo(post.date)}
 					  		</small>
 				  		</div>
 			  		`).join('')}
@@ -63,32 +38,6 @@ app.get("/", (req, res) => {
 app.get("/posts/:id", (req, res) => {
 	const id = req.params.id;
 	const post = postBank.find(id);
-
-	function timeSince(date) {
-		let seconds = Math.floor((new Date() - date) / 1000);
-		let interval = seconds / 31536000;
-		if (interval > 1) {
-		  return Math.floor(interval) + " years ago";
-		}
-		interval = seconds / 2592000;
-		if (interval > 1) {
-		  return Math.floor(interval) + " months ago";
-		}
-		interval = seconds / 86400;
-		if (interval >= 1) {
-		  return Math.floor(interval) + " day(s) ago";
-		}
-		interval = seconds / 3600;
-		if (interval > 1) {
-		  return Math.floor(interval) + " hours ago";
-		}
-		interval = seconds / 60;
-		if (interval > 1) {
-		  return Math.floor(interval) + " minutes ago";
-		}
-		return Math.floor(seconds) + " seconds ago";
-  }
-  let aDay = 24*60*60*1000;
 
 	if (!post.id) {
 		throw new Error('Dumbledore has extracted this into his personal Pensieve. You do not have access to it.')
@@ -108,7 +57,7 @@ app.get("/posts/:id", (req, res) => {
 									<small>(by ${post.name})</small>
 					  			</p>
 					  			<small class="news-info">
-						  			${post.upvotes} upvotes | ${timeSince(new Date(post.date)-aDay)}
+						  			${post.upvotes} upvotes | ${timeAgo(post.date)}
 					  			</small>
 				  			</div>
 		  			</div>
@@ -132,8 +81,8 @@ app.use(function (err, req, res, next) {
 	`)
   })
 
-const {PORT} = process.env;
+const {PORT = 1337} = process.env;
 
 app.listen(PORT, () => {
-  console.log(`App listening in port ${PORT}`);
+	console.log(`App listening in port ${PORT}`);
 });
